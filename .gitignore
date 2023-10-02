@@ -14,7 +14,10 @@ obj$
 obj.meta$
 .config/
 .vscode/
-
+Asteroids_BurstDebugInformation_DoNotShip/
+ProjectSettings/BurstAotSettings_Android.json
+cmds.txt
+*.meta
 
 build/**
 PackageSources
