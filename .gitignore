@@ -25,3 +25,7 @@ Packages/.gitignore
 
 SceneDependencyCache.meta
 SceneDependencyCache/
+
+# Ignore temporaries from GameCI
+/[Aa]rtifacts/
+/[Cc]odeCoverage/
