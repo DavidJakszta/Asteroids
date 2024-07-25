@@ -9,12 +9,13 @@ public class BuildScript
 {
     static void PerformAndroidBuild()
     {
+        //    GetCommandLineArgs
+
         string[] defaultScene = {
             "Assets/Scenes/SampleScene.unity",
-            "C:\\Users\\hehexd\\Asteroids\\Assets\\Scenes\\SampleScene.unity",
             };
 
-        BuildPipeline.BuildPlayer(defaultScene, "C:\\Users\\hehexd\\Asteroids\\Builds\\Android\\Asteroids.apk",
+        BuildPipeline.BuildPlayer(defaultScene, "Builds\\Android\\Asteroids.apk",
             BuildTarget.Android, BuildOptions.None);
     }
 
