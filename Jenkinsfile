@@ -19,7 +19,7 @@ pipeline {
                     def unityProjectPath = 'C:\\Users\\hehexd\\Asteroid'
 
                     dir(unityProjectPath) {
-                        def unityExecutable = 'C:\\Programme\\Unity\\Hub\\Editor\\2021.3.22f1\\Editor\\Unity.exe'
+                        def unityExecutable = 'C:\\Program Files\\Unity\\Hub\\Editor\\2021.3.22f1\\Editor\\Unity.exe'
                         def unityBuildCmd
                         def buildResult
 
