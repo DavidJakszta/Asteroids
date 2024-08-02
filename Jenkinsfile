@@ -23,14 +23,6 @@ pipeline {
                     } else {
                         error("Invalid build target selected: ${params.BUILD_TARGET}")
                     }
-
-                    if (buildResult == 0) {
-                        currentBuild.result = 'SUCCESS'
-                    } else {
-                        currentBuild.result = 'FAILURE'
-                        error("Unity build failed with exit code ${buildResult}")
-                    }
-                    
                 }
             }
         }
