@@ -5,7 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     name: Build my project 
-    runs-on: ubuntu-latest
+    runs-on: my-windows
     steps:
       # Checkout (without LFS)
       - name: Checkout repository
@@ -29,12 +29,12 @@ jobs:
       #     git reset --hard
 
       # Cache
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
+    #   - uses: actions/cache@v3
+    #     with:
+    #       path: Library
+    #       key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+    #       restore-keys: |
+    #         Library-
 
       # # Test
       # - name: Run tests
