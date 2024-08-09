@@ -4,7 +4,7 @@ on: [workflow_dispatch]
 
 jobs:
   build:
-    name: Build my project 
+    name: Build my project on self-hosted runner
     runs-on: my-windows
     steps:
       # Checkout (without LFS)
