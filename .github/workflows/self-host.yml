@@ -5,7 +5,7 @@ on: [workflow_dispatch]
 jobs:
   build:
     name: Build my project on self-hosted runner
-    runs-on: my-windows
+    runs-on: [self-hosted, my-windows]
     steps:
       # Checkout (without LFS)
       - name: Checkout repository
@@ -58,7 +58,7 @@ jobs:
           buildMethod: BuildScript.PerformWindowsBuild${{ inputs.build-method }}
 
       # Output
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Builds
 
