@@ -1,4 +1,4 @@
-name: Actions 
+name: Self-Hosted Unity-Build
 
 on: [workflow_dispatch]
 
