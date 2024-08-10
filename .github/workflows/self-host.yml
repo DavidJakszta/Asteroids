@@ -58,6 +58,7 @@ jobs:
           buildMethod: BuildScript.PerformWindowsBuild${{ inputs.build-method }}
           #runAsHostUser: true
           dockerWorkspacePath: /github/workspace
+          containerRegistryImageVersion: 2
 
       # Output
       - uses: actions/upload-artifact@v4
