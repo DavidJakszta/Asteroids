@@ -29,3 +29,6 @@ SceneDependencyCache/
 # Ignore temporaries from GameCI
 /[Aa]rtifacts/
 /[Cc]odeCoverage/
+
+#temp file directory
+guides/
