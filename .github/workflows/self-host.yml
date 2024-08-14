@@ -57,10 +57,10 @@ jobs:
         with:
           targetPlatform: StandaloneWindows
           buildMethod: BuildScript.PerformWindowsBuild${{ inputs.build-method }}
-          runAsHostUser: true
+          #runAsHostUser: true
           dockerWorkspacePath: /github/workspace
-          # customImage: unityci/editor:ubuntu-2021.3.22f1-windows-mono-3
-          containerRegistryImageVersion: 2
+          customImage: unityci/editor:ubuntu-2021.3.22f1-windows-mono-3
+          #containerRegistryImageVersion: 2
 
       # Output
       - uses: actions/upload-artifact@v4
