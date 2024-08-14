@@ -4,21 +4,28 @@ pipeline {
     parameters {
         choice(name: 'BUILD_TARGET', choices: ['Windows', 'Android'], description: 'Select the build target')
     }
-
+    options { 
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '15'))
+        timestamps() 
+        //retry(3)
+    }
+    environment {
+       unityExecutable = "\"C:\\Program Files\\Unity\\Hub\\Editor\\2021.3.22f1\\Editor\\Unity.exe\""
+       SLACK_TOKEN = credentials("Slack_OAuth_Token")
+    }
     stages {
         stage('Build') {
             steps {
                 script {
-
-                    def unityExecutable = "\"C:\\Program Files\\Unity\\Hub\\Editor\\2021.3.22f1\\Editor\\Unity.exe\""
                     def unityBuildCmd
                     def buildResult
                     print("unitypath from env:" + env.UnityPath)
                     if (params.BUILD_TARGET == 'Windows') {
-                        unityBuildCmd = "${unityExecutable} -batchmode -nographics -projectPath $workspace -buildWindowsPlayer Builds\\Windows\\Asteroids.exe -logFile Builds\\Windows\\build.log -quit"
+                        unityBuildCmd = "${env.unityExecutable} -batchmode -nographics -projectPath $workspace -buildWindowsPlayer Builds\\Windows\\Asteroids.exe -logFile Builds\\Windows\\build.log -quit"
                         buildResult = bat(script: unityBuildCmd, returnStatus: true)
                     } else if (params.BUILD_TARGET == 'Android') {
-                        unityBuildCmd = "${unityExecutable} -batchmode -nographics -projectPath $workspace -executeMethod BuildScript.PerformAndroidBuild -logFile build.log -quit"
+                        unityBuildCmd = "${env.unityExecutable} -batchmode -nographics -projectPath $workspace -executeMethod BuildScript.PerformAndroidBuild -logFile build.log -quit"
                         buildResult = bat(script: unityBuildCmd, returnStatus: true)
                     } else {
                         error("Invalid build target selected: ${params.BUILD_TARGET}")
