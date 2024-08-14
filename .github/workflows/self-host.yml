@@ -58,7 +58,7 @@ jobs:
           targetPlatform: StandaloneWindows
           buildMethod: BuildScript.PerformWindowsBuild${{ inputs.build-method }}
           #runAsHostUser: true
-          dockerWorkspacePath: C:\github\workspace
+          dockerWorkspacePath: /github/workspace
           customImage: unityci/editor:ubuntu-2021.3.22f1-windows-mono-3
           #containerRegistryImageVersion: 2
 
