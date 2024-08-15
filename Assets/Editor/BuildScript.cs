@@ -30,4 +30,19 @@ public class BuildScript
             BuildTarget.StandaloneWindows, BuildOptions.None);
     }
 
+    static void PerformWindowsBuild_ILCPP()
+    {
+        //    GetCommandLineArgs
+
+        string[] defaultScene = {
+            "Assets/Scenes/SampleScene.unity",
+            };
+
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
+
+        BuildPipeline.BuildPlayer(defaultScene, "Builds\\Windows\\Asteroids.exe",
+            BuildTarget.StandaloneWindows, BuildOptions.None);
+    }
+
+
 }

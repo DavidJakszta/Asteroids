@@ -56,11 +56,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneWindows
-          buildMethod: BuildScript.PerformWindowsBuild${{ inputs.build-method }}
+          buildMethod: BuildScript.PerformWindowsBuild_ILCPP${{ inputs.build-method }}
           #runAsHostUser: true
-          dockerWorkspacePath: /github/workspace
-          customImage: unityci/editor:ubuntu-2021.3.22f1-windows-mono-3
-          #containerRegistryImageVersion: 2
+          #dockerWorkspacePath: /github/workspace
+          customImage: david3216849/windows-2021.3.22f1-il2cpp-2-with-unity-path
+          #containerRegistryImageVersion: 1
 
       # Output
       - uses: actions/upload-artifact@v4
