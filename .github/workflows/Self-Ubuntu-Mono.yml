@@ -1,4 +1,4 @@
-name: Self-Hosted Windows-ILCPP-Build
+name: Self-Hosted Windows-Mono-Build
 
 on: [workflow_dispatch, push]
 
