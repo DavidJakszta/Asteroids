@@ -1,36 +1,100 @@
-FROM mcr.microsoft.com/dotnet/runtime-deps:6.0 as build
+FROM ubuntu:24.04
+### Combination of https://game.ci/docs/self-hosting/host-provisioning/ubuntu-setup and https://github.com/Pwd9000-ML/docker-github-runner-linux/tree/master
 
-# Replace value with the latest runner release version
-# source: https://github.com/actions/runner/releases
-# ex: 2.303.0
-ARG RUNNER_VERSION="v0.6.1"
-ARG RUNNER_ARCH="x64"
-# Replace value with the latest runner-container-hooks release version
-# source: https://github.com/actions/runner-container-hooks/releases
-# ex: 0.3.1
-ARG RUNNER_CONTAINER_HOOKS_VERSION=""
+#image buildarguments | GitHub runner version argument Example: 2.319.1
+ARG RUNNER_VERSION 
+ARG DRIVER_VERSION="560.31.02"
 
+#container runtime variables
 ENV DEBIAN_FRONTEND=noninteractive
-ENV RUNNER_MANUALLY_TRAP_SIG=1
-ENV ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT=1
+# ENV DRIVER_VERSION ="560.31.02"
+ENV GH_OWNER="DavidJakszta"
+ENV GH_REPOSITORY="Asteroids"
+ENV NEW_USER="docker"
+ENV GH_TOKEN="GH_PAT_TOKEN"
 
-RUN apt update -y && apt install curl unzip -y
+LABEL NAME="Ubuntu GHA-Runner for Game-CI's Unity-Builder"
+LABEL BaseImage="ubuntu:24.04"
+LABEL RunnerVersion=${RUNNER_VERSION}
 
-RUN adduser --disabled-password --gecos "" --uid 1001 runner \
-    && groupadd docker --gid 123 \
-    && usermod -aG sudo runner \
-    && usermod -aG docker runner \
-    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
-    && echo "Defaults env_keep += \"DEBIAN_FRONTEND\"" >> /etc/sudoers
+# add over the start.sh script
+ADD scripts/start.sh start.sh
 
-WORKDIR /home/runner
+# make the script executable
+RUN chmod +x start.sh
 
-RUN curl -f -L -o runner.tar.gz https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${RUNNER_ARCH}-${RUNNER_VERSION}.tar.gz \
-    && tar xzf ./runner.tar.gz \
-    && rm runner.tar.gz
+#RUN export NEW_USER="docker"
+RUN apt-get update -y && apt-get upgrade -y
 
-RUN curl -f -L -o runner-container-hooks.zip https://github.com/actions/runner-container-hooks/releases/download/v${RUNNER_CONTAINER_HOOKS_VERSION}/actions-runner-hooks-k8s-${RUNNER_CONTAINER_HOOKS_VERSION}.zip \
-    && unzip ./runner-container-hooks.zip -d ./k8s \
-    && rm runner-container-hooks.zip
+# add user, specify shell, set home directory, add user to sudo group
+RUN useradd -s /bin/bash -d /home/$NEW_USER/ -m -G sudo $NEW_USER
 
-USER runner
+# install common programs for Game-CI Unity-Builder and GHA
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+    wireguard \
+    ssh-import-id \
+    sudo \
+    curl \
+    tmux \
+    netplan.io \
+    apt-transport-https \
+    ca-certificates \
+    software-properties-common \
+    htop \
+    git \
+    git-extras \
+    rsyslog \
+    fail2ban \
+    vim \
+    gpg \
+    open-iscsi \
+    nfs-common \
+    ncdu \
+    zip \
+    unzip \
+    jq \
+    unzip \
+    iotop && \
+    sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && \
+    sudo chmod +x /usr/bin/yq
+
+RUN cd /home/${NEW_USER} && mkdir actions-runner && cd actions-runner \
+    && curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+    && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+
+# Grant passwordless sudo permission
+RUN echo "$NEW_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Add the user to relevant groups
+RUN usermod -a -G kvm $NEW_USER
+#set username as default user
+USER ${NEW_USER}
+
+# set the entrypoint to the start.sh script
+ENTRYPOINT ["./start.sh"]
+
+
+### GFX driver for ubuntu
+#install nvidia gfx-card drivers
+# RUN sudo apt-get install -y ubuntu-drivers-common \
+#     linux-headers-generic \
+#     gcc \
+#     kmod \
+#     make \
+#     pkg-config \
+#     libvulkan1
+
+# RUN curl --progress-bar -fL -O "https://us.download.nvidia.com/XFree86/Linux-x86_64/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run"
+# RUN sudo bash "NVIDIA-Linux-x86_64-$DRIVER_VERSION.run" --silent --no-questions --disable-nouveau --dkms
+
+### alternatively, auto-install | supposedly broken for some card types
+### sudo ubuntu-drivers autoinstall
+
+#Download Docker for Dind
+#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+#sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# sudo apt-get update && sudo apt-get install -y docker-ce
+# usermod -a -G docker $NEW_USER
