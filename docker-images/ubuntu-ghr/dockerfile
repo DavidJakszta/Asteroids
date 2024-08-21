@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # ENV DRIVER_VERSION ="560.31.02"
 ENV GH_OWNER="DavidJakszta"
 ENV GH_REPOSITORY="Asteroids"
-ENV NEW_USER="docker"
+ENV NEW_USER="runner"
 ENV GH_TOKEN="GH_PAT_TOKEN"
 #ENV PATH="/usr/local/bin/docker:$PATH" 
 
@@ -71,6 +71,8 @@ RUN echo "$NEW_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Add the user to relevant groups
 RUN usermod -a -G kvm $NEW_USER
+#make user part of the root group to execute the docker socket
+RUN sudo usermod -aG root runner
 #set username as default user
 USER ${NEW_USER}
 
