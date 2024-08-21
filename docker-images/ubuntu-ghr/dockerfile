@@ -12,6 +12,7 @@ ENV GH_OWNER="DavidJakszta"
 ENV GH_REPOSITORY="Asteroids"
 ENV NEW_USER="docker"
 ENV GH_TOKEN="GH_PAT_TOKEN"
+#ENV PATH="/usr/local/bin/docker:$PATH" 
 
 LABEL NAME="Ubuntu GHA-Runner for Game-CI's Unity-Builder"
 LABEL BaseImage="ubuntu:24.04"
@@ -43,6 +44,7 @@ RUN apt-get update && \
     software-properties-common \
     htop \
     git \
+    git-lfs \
     git-extras \
     rsyslog \
     fail2ban \
@@ -55,6 +57,7 @@ RUN apt-get update && \
     unzip \
     jq \
     unzip \
+    docker.io \
     iotop && \
     sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && \
     sudo chmod +x /usr/bin/yq
