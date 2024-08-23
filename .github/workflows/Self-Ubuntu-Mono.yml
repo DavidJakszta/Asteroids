@@ -73,4 +73,4 @@ jobs:
       - name: Reset Permissions
         run: | 
           sudo chown -R runner:runner /home/runner/actions-runner/
-        shell: sh
+        shell: bash
