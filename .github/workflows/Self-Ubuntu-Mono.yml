@@ -8,11 +8,6 @@ jobs:
     runs-on: [self-hosted, Linux]
     steps:
 
-      # Reset Permissions before a build
-      - name: Reset Permissions
-        shell: sh
-        run: sudo chown -R runner:runner /home/runner/actions-runner/
-
       # Checkout (without LFS)
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -74,3 +69,7 @@ jobs:
           name: Builds
           path: Builds
       
+      # Reset Permissions after a build
+      - name: Reset Permissions
+        shell: sh
+        run: sudo chown -R runner:runner /home/runner/actions-runner/
