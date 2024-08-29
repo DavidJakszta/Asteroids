@@ -1,4 +1,4 @@
-name: Self-Hosted Windows-Mono-Build DinD on Ubuntu
+name: Self-Hosted Windows-Mono-Build DinD on Alpine
 
 on: [workflow_dispatch]
 

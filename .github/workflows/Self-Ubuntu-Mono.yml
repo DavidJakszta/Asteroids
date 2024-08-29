@@ -1,4 +1,4 @@
-name: Self-Hosted Windows-Mono-Build DooD on Alpine
+name: Self-Hosted Windows-Mono-Build DooD on Ubuntu
 
 on: [workflow_dispatch]
 
@@ -54,10 +54,10 @@ jobs:
           #containerRegistryImageVersion: 1
 
       # Output
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Builds
-          path: Builds
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Builds
+      #     path: Builds
       
       # Reset Permissions after a build
       - name: Reset Permissions
