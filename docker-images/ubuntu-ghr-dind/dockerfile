@@ -1,0 +1,51 @@
+# Base Image 
+FROM docker:dind
+
+ARG RUNNER_VERSION="2.319.1"
+ARG GLIBC_VERSION="2.35-r0"
+
+# Environment Variables
+ENV GH_OWNER="DavidJakszta"
+ENV GH_REPOSITORY="Asteroids"
+ENV NEW_USER="runner"
+ENV GH_TOKEN="GH_PAT_TOKEN"
+
+# # Copy start.sh script and make it executable
+COPY scripts/start.sh /start.sh
+RUN chmod +x /start.sh
+
+RUN apk update && apk upgrade
+
+RUN apk add --no-cache \
+    jq \
+    bash \
+    sudo \
+    git \
+    git-lfs \
+    curl \
+    tar \
+    dotnet6-sdk
+
+# Create a new user and add to sudo group -> Download and setup GitHub Actions runner
+RUN adduser -D -s /bin/sh -h /home/$NEW_USER $NEW_USER && \
+    addgroup $NEW_USER wheel 
+
+RUN cd /home/${NEW_USER} && \
+    mkdir actions-runner && \
+    cd actions-runner && \
+    curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz && \
+    tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz && \
+    chown -R $NEW_USER:$NEW_USER /home/${NEW_USER}/actions-runner
+
+RUN git clone https://gitlab.com/manoel-linux1/GlibMus-HQ.git && \ 
+    cd GlibMus-HQ && \
+    chmod a+x compile-x86_64-alpine-linux.sh && \
+    ./compile-x86_64-alpine-linux.sh
+
+RUN ln -s /home/${NEW_USER}/actions-runner/bin/Runner.Listener.dll /lib/ && \
+    export LD_PRELOAD=/lib/GLIBCFAKE.so.0 && \
+    sed -i "59d" /home/${NEW_USER}/actions-runner/config.sh
+
+ENTRYPOINT [ "/start.sh" ]
+
+
