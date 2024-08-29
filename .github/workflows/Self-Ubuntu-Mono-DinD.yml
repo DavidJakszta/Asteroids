@@ -1,12 +1,13 @@
-name: Self-Hosted Windows-ILCPP-Build on Windows 10
+name: Self-Hosted Windows-Mono-Build DinD on Ubuntu
 
 on: [workflow_dispatch]
 
 jobs:
   build:
-    name: Build my project on self-hosted runner
-    runs-on: [self-hosted, windows]
+    name: Build Asteroids on self-hosted Docker in Docker Runner
+    runs-on: [self-hosted, DinD]
     steps:
+
       # Checkout (without LFS)
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,24 +40,21 @@ jobs:
 
       # Build
       - name: Build project - using unity-builder@v4
-        uses: DavidJakszta/unity-builder@874ab1b6b74a1c738d930943e18cacbd7ef89774
+        uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneWindows
-          buildMethod: BuildScript.PerformWindowsBuild_ILCPP${{ inputs.build-method }}
+          buildMethod: BuildScript.PerformWindowsBuild${{ inputs.build-method }}
           #runAsHostUser: true
           #dockerWorkspacePath: /github/workspace
-          customImage: david3216849/windows-2021.3.22f1-il2cpp-2-with-unity-path
+          #customImage: david3216849/ubuntu-2021.3.22f1-windows-mono-3-permissionfix
           #containerRegistryImageVersion: 1
 
       # Output
       - uses: actions/upload-artifact@v4
         with:
           name: Builds
-
           path: Builds
-
-          

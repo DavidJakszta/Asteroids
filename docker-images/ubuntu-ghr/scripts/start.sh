@@ -3,6 +3,7 @@
 GH_OWNER=$GH_OWNER
 GH_REPOSITORY=$GH_REPOSITORY
 GH_TOKEN=$GH_TOKEN
+LABELS=DooD
 
 RUNNER_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
 RUNNER_NAME="dockerNode-${RUNNER_SUFFIX}"
@@ -11,7 +12,7 @@ REG_TOKEN=$(curl -sX POST -H "Accept: application/vnd.github.v3+json" -H "Author
 
 cd /home/$NEW_USER/actions-runner
 
-./config.sh --unattended --url https://github.com/${GH_OWNER}/${GH_REPOSITORY} --token ${REG_TOKEN} --name ${RUNNER_NAME}
+./config.sh --unattended --url https://github.com/${GH_OWNER}/${GH_REPOSITORY} --token ${REG_TOKEN} --name ${RUNNER_NAME} --labels $LABELS
 
 cleanup() {
     echo "Removing runner..."

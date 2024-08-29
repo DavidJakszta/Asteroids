@@ -6,3 +6,7 @@ jobs:
   build:
     name: test
     runs-on: self-hosted
+    steps:
+      - name: Echo test
+      shell: sh
+      run: echo test

@@ -1,11 +1,11 @@
-name: Self-Hosted Windows-ILCPP-Build on Windows 10
+name: Cloud Windows-ILCPP-Build on Windows
 
 on: [workflow_dispatch]
 
 jobs:
   build:
-    name: Build my project on self-hosted runner
-    runs-on: [self-hosted, windows]
+    name: Build Windows-ILCPP-Build on Windows Cloud Runner
+    runs-on: windows-latest
     steps:
       # Checkout (without LFS)
       - name: Checkout repository
@@ -37,6 +37,16 @@ jobs:
           restore-keys: |
             Library-
 
+      # # Test
+      # - name: Run tests
+      #   uses: game-ci/unity-test-runner@v4
+      #   env:
+      #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      #     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #   with:
+      #     githubToken: ${{ secrets.GITHUB_TOKEN }}
+
       # Build
       - name: Build project - using unity-builder@v4
         uses: DavidJakszta/unity-builder@874ab1b6b74a1c738d930943e18cacbd7ef89774
@@ -49,14 +59,13 @@ jobs:
           buildMethod: BuildScript.PerformWindowsBuild_ILCPP${{ inputs.build-method }}
           #runAsHostUser: true
           #dockerWorkspacePath: /github/workspace
-          customImage: david3216849/windows-2021.3.22f1-il2cpp-2-with-unity-path
+          #customImage: david3216849/windows-2021.3.22f1-il2cpp-2-with-unity-path
           #containerRegistryImageVersion: 1
 
       # Output
       - uses: actions/upload-artifact@v4
         with:
           name: Builds
-
           path: Builds
 
           
