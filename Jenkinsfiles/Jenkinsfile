@@ -22,10 +22,10 @@ pipeline {
                     def buildResult
                     print("unitypath from env:" + env.UnityPath)
                     if (params.BUILD_TARGET == 'Windows') {
-                        unityBuildCmd = "${env.unityExecutable} -batchmode -nographics -projectPath $workspace -buildWindowsPlayer Builds\\Windows\\Asteroids.exe -logFile Builds\\Windows\\build.log -quit"
+                        unityBuildCmd = "${env.unityExecutable} -batchmode -nographics -projectPath $workspace -executeMethod BuildScript.PerformWindowsBuild Builds\\Windows\\Asteroids.exe -logFile Builds\\Windows\\build.log -quit"
                         buildResult = bat(script: unityBuildCmd, returnStatus: true)
                     } else if (params.BUILD_TARGET == 'Android') {
-                        unityBuildCmd = "${env.unityExecutable} -batchmode -nographics -projectPath $workspace -executeMethod BuildScript.PerformAndroidBuild -logFile build.log -quit"
+                        unityBuildCmd = "${env.unityExecutable} -batchmode -nographics -projectPath $workspace -executeMethod BuildScript.PerformAndroidBuild -logFile Builds\\Asteroids\\build.log -quit"
                         buildResult = bat(script: unityBuildCmd, returnStatus: true)
                     } else {
                         error("Invalid build target selected: ${params.BUILD_TARGET}")
