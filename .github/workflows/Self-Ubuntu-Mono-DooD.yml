@@ -58,6 +58,12 @@ jobs:
       #   with:
       #     name: Builds
       #     path: Builds
+
+      # Verifiy build exists
+      - name: Verify build
+        run: | 
+          ls Builds/Windows/Asteroids.exe
+        shell: bash
       
       # Reset Permissions after a build
       - name: Reset Permissions
